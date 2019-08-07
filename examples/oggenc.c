@@ -25,10 +25,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+
+#ifndef _MSC_VER
 #include <sys/time.h>
 #include <sys/types.h>
-#include <time.h>
 #include <unistd.h>
+#endif
+#include <time.h>
+
 
 #include "../tgc.h"
 

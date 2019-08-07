@@ -1,0 +1,39 @@
+CC = cl
+AR = lib
+CFLAGS =-Wall
+LFLAGS = -fpic
+ECFLAGS = 
+
+INCDIR = $(PREFIX)/include
+LIBDIR = $(PREFIX)/lib
+
+OBJECT = tgc.obj
+STATIC = libtgc.lib
+DYNAMIC = libtgc.dll
+
+all: $(STATIC) $(DYNAMIC)
+
+$(OBJECT): tgc.c tgc.h
+	$(CC) /c $(CFLAGS) tgc.c
+
+$(DYNAMIC): $(OBJECT)
+	$(CC) /LD /Fe$@ $(OBJECT)
+
+$(STATIC): $(OBJECT)
+	$(AR) /OUT:$@ $(OBJECT)
+
+install:
+	cp -f $(STATIC) $(LIBDIR)
+	cp -f tgc.h $(INCDIR)
+
+check:
+	$(CC) $(ECFLAGS) examples\basic.c tgc.c /Fe.\examples\basic && \
+$(CHECKER) .\examples\basic
+	$(CC) $(ECFLAGS) examples\advanced.c tgc.c /Fe.\examples\advanced && \
+$(CHECKER) .\examples\advanced  
+	$(CC) $(ECFLAGS) examples\bzip2.c tgc.c /Fe.\examples\bzip2 && \
+$(CHECKER) .\examples\bzip2 -c .\examples\Lenna.png -9 > .\examples\Lenna.png.bz
+	$(CC) $(ECFLAGS) examples\mpc.c tgc.c /Fe.\examples\mpc
+
+clean:
+	del $(STATIC) $(DYNAMIC) $(OBJECT) *.obj examples\*.obj examples\*.exe
